@@ -220,7 +220,7 @@ try:
     elif args.action == 'test':
         # read test data 
         test_path = 'data/test_data' 
-        test_data,answer = read_test(test_path,corpus)
+        test_data,answer = read_test(test_path,corpus,args.cuda)
        
         print ('test data size : %d'%len(test_data))
         # Load the best saved model.

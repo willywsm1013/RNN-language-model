@@ -52,7 +52,7 @@ class Corpus(object):
             ret += self.dictionary.idx2word[idx[0]]
         return ret
 
-def read_test(path,corpus):
+def read_test(path,corpus,cuda):
     def tokenize(text):
         ret = ['<bos>']
         
@@ -85,8 +85,11 @@ def read_test(path,corpus):
             dialogue = [w for sen in dialogue for w in sen]
 
             option = [[corpus.dictionary.word2idx.get(w) for w in tokenize(o) if corpus.dictionary.word2idx.get(w) != None] for o in option]
-       
-            combine = [torch.cuda.LongTensor(dialogue + o).view(-1,1) for o in option]
+      
+            if cuda:
+                combine = [torch.cuda.LongTensor(dialogue + o).view(-1,1) for o in option]
+            else:
+                combine = [torch.LongTensor(dialogue + o).view(-1,1) for o in option]
 
             test_data.append(combine)
             answer.append(int(lines[3]))
