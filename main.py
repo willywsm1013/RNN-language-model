@@ -44,10 +44,11 @@ parser.add_argument('--log-interval', type=int, default=200, metavar='N',
 parser.add_argument('--save', type=str,  default='model.pt',
                     help='path to save the final model')
 parser.add_argument('--action', type=str)
+parser.add_argument('--verbose', action = 'store_true')
 
 
 args = parser.parse_args()
-
+verbose = args.verbose
 # Set the random seed manually for reproducibility.
 torch.manual_seed(args.seed)
 if torch.cuda.is_available():
@@ -219,17 +220,17 @@ try:
 
     elif args.action == 'test':
         # read test data 
-        test_path = 'data/test_data' 
-        test_data,answer = read_test(test_path,corpus,args.cuda)
+        test_path = 'data/AIFirst_test_problem.txt'
+        test_data = read_test(test_path,corpus,args.cuda)
        
         print ('test data size : %d'%len(test_data))
         # Load the best saved model.
         with open(args.save, 'rb') as f:
             model = torch.load(f)
         model.eval()
-        count = 0
         for index,data in enumerate(test_data):
-            print ('=========================================') 
+            if verbose:
+                print ('=========================================') 
             assert len(data) == 6
             ppls = []
             for d in data:
@@ -241,16 +242,11 @@ try:
                 loss = criterion(output_flat, targets).data
                 ppl = math.exp(loss[0])
                 ppls.append(ppl)
-                #print ('%s | ppl : %f'%(corpus.idx2word(d),ppl))
+                if verbose:
+                    print ('%s | ppl : %f'%(corpus.idx2word(d),ppl))
             ans = np.argmin(ppls)
-            if ans == answer[index]:
-                print ('Correct !')
-                count += 1
-            else:
-                print ('Error !')
-            print ('choose %d'%np.argmin(ppls))
-        print (count)
-        print ('acc : %f'%(count/len(test_data)))
+            if verbose :
+                print ('choose %d'%ans)
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
