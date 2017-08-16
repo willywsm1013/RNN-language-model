@@ -10,6 +10,7 @@ import argparse
 import torch
 from torch.autograd import Variable
 
+import readline
 import data
 
 parser = argparse.ArgumentParser(description='PyTorch PTB Language Model')
