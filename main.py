@@ -183,41 +183,7 @@ try:
             else:
                 # Anneal the learning rate if no improvement has been seen in the validation dataset.
                 lr /= 4.0
-    
-    elif args.action == 'gen':
-        inpL = input('> ')
-
-        tokens = 0
-        words = ['<bos>'] + inpL.split() + ['<eos>']
-        tokens += len(words)
-        for word in words:
-            corpus.dictionary.add_word(word)
-
-        if args.cuda:
-            ids = torch.cuda.LongTensor(tokens)
-        else:
-            ids = torch.LongTensor(tokens)
-
-        token = 0
-        for word in words:
-            ids[token] = corpus.dictionary.word2idx[word]
-            token += 1
-
-        with open(args.save, 'rb') as f:
-            model = torch.load(f)
-
-        hidden = model.init_hidden(args.batch_size)
-        outW = None
-        outS = []
-        while outW != '<eos>':
-            output, hidden = model(ids, hidden)
-            output_flat = output.view(-1, ntokens)
-            V, ID = output_flat.max(0)
-            outW = corpus.dictionary.idx2word[ID]
-            outS.append(outW)
-            hidden = repackage_hidden(hidden)
-        print('generate sentence : ' + outS)
-
+                
     elif args.action == 'test':
         # read test data 
         test_path = 'data/AIFirst_test_problem.txt'
