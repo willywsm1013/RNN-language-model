@@ -21,8 +21,8 @@ This code is modified from pytorch example (https://github.com/pytorch/examples)
         * if you have and you want to use GPU, add --cuda
             python3 main.py train --cuda
             
-    3. Testing on AIFirst\_test\_problem
-        * put AIFirst\_test\_problem.txt into RNN-language-model/data/
+    3. Testing on AIFirst_test_problem
+        * put AIFirst_test_problem.txt into RNN-language-model/data/
         
         * test with default argument:
             python3 main.py test
