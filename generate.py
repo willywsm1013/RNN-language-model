@@ -16,7 +16,7 @@ import data
 parser = argparse.ArgumentParser(description='PyTorch PTB Language Model')
 
 # Model parameters.
-parser.add_argument('--data', type=str, default='./data/format_data',
+parser.add_argument('--data', type=str, default='./data/',
                     help='location of the data corpus')
 parser.add_argument('--checkpoint', type=str, default='./all_data_model.pt',
                     help='model checkpoint to use')

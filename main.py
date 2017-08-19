@@ -11,7 +11,8 @@ import model
 from data import read_test
 
 parser = argparse.ArgumentParser(description='PyTorch PennTreeBank RNN/LSTM Language Model')
-parser.add_argument('--data', type=str, default='./data/format_data/',
+parser.add_argument('action', choices=['train', 'test'])
+parser.add_argument('--data', type=str, default='./data/',
                     help='location of the data corpus')
 parser.add_argument('--model', type=str, default='LSTM',
                     help='type of recurrent net (RNN_TANH, RNN_RELU, LSTM, GRU)')
@@ -43,7 +44,9 @@ parser.add_argument('--log-interval', type=int, default=200, metavar='N',
                     help='report interval')
 parser.add_argument('--save', type=str,  default='model.pt',
                     help='path to save the final model')
-parser.add_argument('--action', type=str)
+parser.add_argument('--test_path',type=str,default='./data/AIFirst_test_problem.txt')
+parser.add_argument('--test_output',type=str,default=None)
+
 parser.add_argument('--verbose', action = 'store_true')
 
 
@@ -186,33 +189,44 @@ try:
                 
     elif args.action == 'test':
         # read test data 
-        test_path = 'data/AIFirst_test_problem.txt'
-        test_data = read_test(test_path,corpus,args.cuda)
+        test_data = read_test(args.test_path,corpus,args.cuda)
        
         print ('test data size : %d'%len(test_data))
-        # Load the best saved model.
+        
+        # Load  model.
         with open(args.save, 'rb') as f:
             model = torch.load(f)
         model.eval()
-        for index,data in enumerate(test_data):
-            if verbose:
-                print ('=========================================') 
-            assert len(data) == 6
-            ppls = []
-            for d in data:
-                inp = Variable(d[:-1], volatile=True)
-                targets = Variable(d[1:],volatile=True).view(-1)
-                hidden = model.init_hidden(1)
-                output, hidden = model(inp, hidden)
-                output_flat = output.view(-1, ntokens)
-                loss = criterion(output_flat, targets).data
-                ppl = math.exp(loss[0])
-                ppls.append(ppl)
+
+        # result saving path
+        test_output  = args.test_output
+        if test_output == None:
+            test_output = '%s_test_output.txt'%args.save.split('.')[0]
+        
+        with open(test_output,'w') as output_file :
+            print ('id,answer',file=output_file)
+            ids = 1
+            for index,data in enumerate(test_data):
                 if verbose:
-                    print ('%s | ppl : %f'%(corpus.idx2word(d),ppl))
-            ans = np.argmin(ppls)
-            if verbose :
-                print ('choose %d'%ans)
+                    print ('=========================================') 
+                assert len(data) == 6
+                ppls = []
+                for d in data:
+                    inp = Variable(d[:-1], volatile=True)
+                    targets = Variable(d[1:],volatile=True).view(-1)
+                    hidden = model.init_hidden(1)
+                    output, hidden = model(inp, hidden)
+                    output_flat = output.view(-1, ntokens)
+                    loss = criterion(output_flat, targets).data
+                    ppl = math.exp(loss[0])
+                    ppls.append(ppl)
+                    if verbose:
+                        print ('%s | ppl : %f'%(corpus.idx2word(d),ppl))
+                ans = np.argmin(ppls)
+                print ('%d,%d'%(ids,ans),file=output_file)
+                ids +=1
+                if verbose :
+                    print ('choose %d'%ans)
 except KeyboardInterrupt:
     print('-' * 89)
     print('Exiting from training early')
