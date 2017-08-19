@@ -14,7 +14,7 @@ This code is modified from pytorch example (https://github.com/pytorch/examples)
         (1) cd RNN-language-model/data/ 
         (2) python3 process.py <file_name>
         (3) python3 split.py <data_file> <split_ratio>
-
+        
     2. Start training
         * if you want to train under default argument :
             python3 main.py train 
