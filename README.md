@@ -4,7 +4,7 @@ RNN based language model
 This code is modified from pytorch example (https://github.com/pytorch/examples).
 
 # Requirement
-
+    * pytorch 0.2.0
 # Usage
     1. Preprocess data
         (0) put pre_subtitle_no_TC directory downloaded from website into RNN-language-model/data/
