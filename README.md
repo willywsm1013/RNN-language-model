@@ -1,5 +1,6 @@
 # RNN-language-model
 RNN based language model
+Slide: https://goo.gl/79pK6u
 
 This code is modified from pytorch example (https://github.com/pytorch/examples).
 
@@ -35,4 +36,4 @@ This code is modified from pytorch example (https://github.com/pytorch/examples)
     
     4. Gernerating sentence
         * python3 generate.py --cuda --checkpoint <model_path>
-            
+        
