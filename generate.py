@@ -92,4 +92,4 @@ while True:
         _input.data.fill_(word_idx)
         word = corpus.dictionary.idx2word[word_idx]
         outS.append(word)
-    print(outS)
+    print(' '.join(outS))
