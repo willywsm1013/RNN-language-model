@@ -7,9 +7,12 @@ class RNNModel(nn.Module):
     def __init__(self, rnn_type, ntoken, ninp, nhid, nlayers, dropout=0.5, tie_weights=False):
         super(RNNModel, self).__init__()
         self.drop = nn.Dropout(dropout)
-        self.encoder = nn.Embedding(ntoken, ninp)
-        self.rnn = nn.LSTM(ninp, nhid, nlayers, dropout=dropout)
-        self.decoder = nn.Linear(nhid, ntoken)
+        '''
+            TODO
+            1. nn.Embedding(vocab_size, embedding_size)
+            2. nn.LSTM(embedding_size, hidden_size, num_layers, dropout=dropout)
+            3. nn.Linear(hidden_size, vocab_size)
+        '''
 
         # Optionally tie weights as in:
         # "Using the Output Embedding to Improve Language Models" (Press & Wolf 2016)
